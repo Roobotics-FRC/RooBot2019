@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4373.robot.RobotMap;
-import frc.team4373.robot.commands.teleop.DrivetrainCommand;
+import frc.team4373.robot.commands.teleop.drivetrain.JoystickCommand;
 
 /**
  * A programmatic representation of the robot's drivetrain, which controls robot movement.
@@ -67,6 +67,6 @@ public class Drivetrain extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new DrivetrainCommand());
+        setDefaultCommand(new JoystickCommand());
     }
 }

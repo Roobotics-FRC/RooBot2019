@@ -1,6 +1,9 @@
 package frc.team4373.robot.input;
 
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
+import frc.team4373.robot.commands.teleop.drivetrain.ShuffleboardCommand;
 import frc.team4373.robot.input.filters.FineGrainedPiecewiseFilter;
 
 /**
@@ -12,6 +15,7 @@ public class OI {
     private static OI oi = null;
     private RooJoystick<FineGrainedPiecewiseFilter> driveJoystick;
     private RooJoystick operatorJoystick;
+    private Button shuffleboardCommandButton;
 
     private OI() {
         this.driveJoystick =
@@ -19,6 +23,8 @@ public class OI {
         this.operatorJoystick =
                 new RooJoystick<>(RobotMap.OPERATOR_JOYSTICK_PORT,
                         new FineGrainedPiecewiseFilter());
+        shuffleboardCommandButton = new JoystickButton(driveJoystick, 11);
+        shuffleboardCommandButton.whenPressed(new ShuffleboardCommand());
     }
 
     /**

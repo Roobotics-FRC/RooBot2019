@@ -1,4 +1,4 @@
-package frc.team4373.robot.commands.teleop;
+package frc.team4373.robot.commands.teleop.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4373.robot.input.OI;
@@ -9,16 +9,11 @@ import frc.team4373.robot.subsystems.Drivetrain;
  *
  * @author Samasaur
  */
-public class DrivetrainCommand extends Command {
+public class JoystickCommand extends Command {
     private Drivetrain drivetrain;
 
-    public DrivetrainCommand() {
+    public JoystickCommand() {
         requires(this.drivetrain = Drivetrain.getInstance());
-    }
-
-    @Override
-    protected void initialize() {
-        System.out.println("Initializing Command");
     }
 
     @Override

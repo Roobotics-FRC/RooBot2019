@@ -1,7 +1,13 @@
 package frc.team4373.robot;
 
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team4373.robot.commands.teleop.drivetrain.ShuffleboardCommand;
 import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
@@ -12,6 +18,7 @@ import frc.team4373.robot.subsystems.Drivetrain;
  * project.
  */
 public class Robot extends TimedRobot {
+    private SendableChooser<Integer> shuffleboardCommandMode;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -19,6 +26,16 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         Drivetrain.getInstance();
+
+        shuffleboardCommandMode = new SendableChooser<>();
+        shuffleboardCommandMode.setDefaultOption("Off", 0);
+        shuffleboardCommandMode.addOption("Forward/Backward", 1);
+        shuffleboardCommandMode.addOption("Spin", 2);
+
+        SmartDashboard.putData("shuffleboardCommandMode", shuffleboardCommandMode);
+
+        SmartDashboard.putNumber("shuffleboardCommandPower", 0);
+        SmartDashboard.putBoolean("shuffleboardCommandRunning", false);
     }
 
     /**
