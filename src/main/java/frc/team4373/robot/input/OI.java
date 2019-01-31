@@ -3,8 +3,13 @@ package frc.team4373.robot.input;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
+import frc.team4373.robot.commands.MotionProfileCommand;
+import frc.team4373.robot.commands.profiles.MotionProfile;
+import frc.team4373.robot.commands.profiles.StraightProfileLeft;
+import frc.team4373.robot.commands.profiles.StraightProfileRight;
 import frc.team4373.robot.commands.teleop.drivetrain.ShuffleboardCommand;
 import frc.team4373.robot.input.filters.FineGrainedPiecewiseFilter;
+import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
  * OI provides access to operator interface devices.
@@ -16,6 +21,7 @@ public class OI {
     private RooJoystick<FineGrainedPiecewiseFilter> driveJoystick;
     private RooJoystick operatorJoystick;
     private Button shuffleboardCommandButton;
+    private Button mpButton;
 
     private OI() {
         this.driveJoystick =
@@ -25,6 +31,10 @@ public class OI {
                         new FineGrainedPiecewiseFilter());
         shuffleboardCommandButton = new JoystickButton(driveJoystick, 11);
         shuffleboardCommandButton.whenPressed(new ShuffleboardCommand());
+        this.mpButton = new JoystickButton(this.driveJoystick, 5);
+        this.mpButton.whenPressed(new MotionProfileCommand(
+                new Drivetrain.TalonID[] {Drivetrain.TalonID.RIGHT_1, Drivetrain.TalonID.LEFT_1},
+                new MotionProfile[] {new StraightProfileRight(), new StraightProfileLeft()}));
     }
 
     /**
