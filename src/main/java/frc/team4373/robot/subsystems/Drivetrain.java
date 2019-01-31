@@ -146,6 +146,15 @@ public class Drivetrain extends Subsystem {
     }
 
     /**
+     * Gets the position of the sensor associated with the specified Talon.
+     * @param talonID the Talon whose sensor position to fetch.
+     * @return the position of the specified sensor.
+     */
+    public int getSensorPosition(TalonID talonID) {
+        return getTalon(talonID).getSelectedSensorPosition();
+    }
+
+    /**
      * Sets motor output to 0.
      */
     public void zeroMotors() {
