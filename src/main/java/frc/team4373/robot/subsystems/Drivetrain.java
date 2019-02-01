@@ -1,10 +1,9 @@
 package frc.team4373.robot.subsystems;
 
 import com.ctre.phoenix.motion.SetValueMotionProfile;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.commands.teleop.drivetrain.JoystickCommand;
@@ -25,11 +24,20 @@ public class Drivetrain extends Subsystem {
         return instance == null ? instance = new Drivetrain() : instance;
     }
 
+    private WPI_TalonSRX left1;
+    private WPI_TalonSRX left2;
+    private WPI_TalonSRX right1;
+    private WPI_TalonSRX right2;
+    private PigeonIMU pigeon;
+
+    private int initialPosition;
+
     private Drivetrain() {
         this.left1 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_MOTOR_FRONT);
         this.left2 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_MOTOR_REAR);
         this.right1 = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_MOTOR_FRONT);
         this.right2 = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_MOTOR_REAR);
+        this.pigeon = new PigeonIMU(this.left2);
 
         this.left1.setNeutralMode(NeutralMode.Brake);
         this.left2.setNeutralMode(NeutralMode.Brake);
@@ -54,12 +62,42 @@ public class Drivetrain extends Subsystem {
         this.left1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
         this.left1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
 
-        this.right1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
+        // this.right1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.setSensorPhase(false);
+        // this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        // this.left1.setSensorPhase(false);
+
+        // Configure left encoder and publish it on Remote Sensor 0
+        this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
+                RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configRemoteFeedbackFilter(this.left1.getDeviceID(),
+                RemoteSensorSource.TalonSRX_SelectedSensor, RobotMap.REMOTE_SENSOR_0,
                 RobotMap.TALON_TIMEOUT_MS);
-        this.right1.setSensorPhase(false);
-        this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
+
+        // Configure Pigeon on Remote Sensor 1
+        this.right1.configRemoteFeedbackFilter(this.pigeon.getDeviceID(),
+                RemoteSensorSource.Pigeon_Yaw, RobotMap.REMOTE_SENSOR_1,
                 RobotMap.TALON_TIMEOUT_MS);
-        this.left1.setSensorPhase(false);
+        this.right1.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1,
+                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configSelectedFeedbackCoefficient(
+                RobotMap.RESOLUTION_UNITS_PER_ROTATION / RobotMap.PIGEON_UNITS_PER_ROTATION,
+                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+
+        // Configure averaging of two sides using a SensorSum
+        this.right1.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0,
+                RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder,
+                RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configSelectedFeedbackCoefficient(0.5, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+                RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configSelectedFeedbackSensor(FeedbackDevice.SensorSum, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+                RobotMap.TALON_TIMEOUT_MS);
+
+        this.initialPosition = this.right1.getSelectedSensorPosition(
+                RobotMap.DRIVETRAIN_POSITION_PID_IDX);
 
         this.right1.config_kF(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kF);
         this.right1.config_kP(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kP);
@@ -70,12 +108,10 @@ public class Drivetrain extends Subsystem {
         this.left1.config_kP(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kP);
         this.left1.config_kI(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kI);
         this.left1.config_kD(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kD);
-    }
 
-    private WPI_TalonSRX left1;
-    private WPI_TalonSRX left2;
-    private WPI_TalonSRX right1;
-    private WPI_TalonSRX right2;
+        this.right1.configAuxPIDPolarity(RobotMap.DRIVETRAIN_AUX_PID_POLARITY,
+                RobotMap.TALON_TIMEOUT_MS);
+    }
 
     public void setLeft(double power) {
         power = safetyCheckSpeed(power);
@@ -92,6 +128,18 @@ public class Drivetrain extends Subsystem {
     public void setBoth(double power) {
         this.setLeft(power);
         this.setRight(power);
+    }
+
+    /**
+     * Sets setpoints for position and heading.
+     * @param positionSetpoint the position to achieve relative to the start.
+     * @param headingSetpoint the heading to maintain.
+     */
+    public void setPositionHeadingSetpoints(double positionSetpoint, double headingSetpoint) {
+        positionSetpoint += initialPosition;
+        this.right1.set(ControlMode.Position, positionSetpoint,
+                DemandType.AuxPID, headingSetpoint);
+        this.left1.follow(this.right1, FollowerType.AuxOutput1);
     }
 
     /**
@@ -153,6 +201,17 @@ public class Drivetrain extends Subsystem {
     public int getSensorPosition(TalonID talonID) {
         return getTalon(talonID).getSelectedSensorPosition();
     }
+
+    /**
+     * Gets the position of the sensor of the specified Talon on the specified PID loop.
+     * @param talonID the Talon whose sensor position to fetch.
+     * @param pidIdx the PID loop on which to fetch.
+     * @return the position of the specified sensor.
+     */
+    public int getSensorPosition(TalonID talonID, int pidIdx) {
+        return getTalon(talonID).getSelectedSensorPosition(pidIdx);
+    }
+
 
     /**
      * Sets motor output to 0.

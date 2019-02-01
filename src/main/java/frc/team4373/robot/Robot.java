@@ -29,12 +29,13 @@ public class Robot extends TimedRobot {
 
         shuffleboardCommandMode = new SendableChooser<>();
         shuffleboardCommandMode.setDefaultOption("Off", 0);
-        shuffleboardCommandMode.addOption("Forward/Backward", 1);
-        shuffleboardCommandMode.addOption("Spin", 2);
+        shuffleboardCommandMode.addOption("DualPID", 1);
+        shuffleboardCommandMode.addOption("PositionOnly", 2);
 
         SmartDashboard.putData("shuffleboardCommandMode", shuffleboardCommandMode);
 
-        SmartDashboard.putNumber("shuffleboardCommandPower", 0);
+        SmartDashboard.putNumber("positionSetpointRelative", 0);
+        SmartDashboard.putNumber("headingSetpoint", 0);
         SmartDashboard.putBoolean("shuffleboardCommandRunning", false);
     }
 

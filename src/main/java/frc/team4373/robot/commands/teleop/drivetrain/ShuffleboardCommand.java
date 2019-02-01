@@ -3,6 +3,7 @@ package frc.team4373.robot.commands.teleop.drivetrain;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
@@ -30,15 +31,25 @@ public class ShuffleboardCommand extends Command {
         System.out.println(chooser.getSelected());
         switch (chooser.getSelected()) {
             case 1:
-                this.drivetrain.setBoth(-SmartDashboard.getNumber("shuffleboardCommandPower", 0));
+                this.drivetrain.setPositionHeadingSetpoints(
+                        SmartDashboard.getNumber("positionSetpointRelative", 0),
+                        SmartDashboard.getNumber("headingSetpointRelative", 0));
                 break;
             case 2:
-                this.drivetrain.setRight(SmartDashboard.getNumber("shuffleboardCommandPower", 0));
-                this.drivetrain.setLeft(-SmartDashboard.getNumber("shuffleboardCommandPower", 0));
                 break;
             default:
                 break;
         }
+
+        SmartDashboard.putNumber("Pigeon Ang",
+                drivetrain.getSensorPosition(Drivetrain.TalonID.LEFT_2,
+                        RobotMap.DRIVETRAIN_HEADING_PID_IDX));
+        SmartDashboard.putNumber("Right Pos",
+                drivetrain.getSensorPosition(Drivetrain.TalonID.RIGHT_1,
+                        RobotMap.DRIVETRAIN_POSITION_PID_IDX));
+        SmartDashboard.putNumber("Left Pos",
+                drivetrain.getSensorPosition(Drivetrain.TalonID.LEFT_1,
+                        RobotMap.DRIVETRAIN_POSITION_PID_IDX));
     }
 
     @Override

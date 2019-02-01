@@ -33,9 +33,18 @@ public class RobotMap {
     }
 
     public static final int DRIVETRAIN_PID_IDX = 0;
+    public static final int DRIVETRAIN_POSITION_PID_IDX = 0;
+    public static final int DRIVETRAIN_HEADING_PID_IDX = 1;
     public static final PID DRIVETRAIN_PID_GAINS = new PID(0, 1,0, 0);
+    public static final boolean DRIVETRAIN_AUX_PID_POLARITY = false;
     public static final int MOTION_PROFILE_BASE_TRAJ_TIMEOUT = 0;
+
     public static final double ENCODER_UNITS_PER_ROTATION = 4096;
+    public static final double PIGEON_UNITS_PER_ROTATION = 8192;
+    public static final double RESOLUTION_UNITS_PER_ROTATION = 3600;
+
+    public static final int REMOTE_SENSOR_0 = 0;
+    public static final int REMOTE_SENSOR_1 = 1;
 
     public static final int TALON_TIMEOUT_MS = 1000;
 }
