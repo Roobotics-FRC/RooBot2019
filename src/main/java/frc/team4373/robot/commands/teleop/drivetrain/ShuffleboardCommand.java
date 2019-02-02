@@ -1,5 +1,6 @@
 package frc.team4373.robot.commands.teleop.drivetrain;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,8 +9,6 @@ import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
  * A Javadoc template. TODO: Update ShuffleboardCommand Javadoc.
- *
- * @author Samasaur
  */
 public class ShuffleboardCommand extends Command {
     private Drivetrain drivetrain;
@@ -41,6 +40,12 @@ public class ShuffleboardCommand extends Command {
                 break;
         }
 
+        SmartDashboard.putNumber("Pos Setpoint", drivetrain.getTalon(Drivetrain.TalonID.RIGHT_1)
+        .getClosedLoopTarget(RobotMap.DRIVETRAIN_POSITION_PID_IDX));
+        SmartDashboard.putNumber("Ang Setpoint", drivetrain.getTalon(Drivetrain.TalonID.RIGHT_1)
+                .getClosedLoopTarget(RobotMap.DRIVETRAIN_HEADING_PID_IDX));
+        SmartDashboard.putNumber("Pos Error", drivetrain.getTalon(Drivetrain.TalonID.RIGHT_1)
+                .getClosedLoopError(RobotMap.DRIVETRAIN_HEADING_PID_IDX));
         SmartDashboard.putNumber("Pigeon Ang",
                 drivetrain.getSensorPosition(Drivetrain.TalonID.LEFT_2,
                         RobotMap.DRIVETRAIN_HEADING_PID_IDX));

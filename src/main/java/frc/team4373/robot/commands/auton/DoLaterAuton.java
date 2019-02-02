@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  * A command group that performs the passed command after the given amount of time.
- *
- * @author Samasaur
  */
 public class DoLaterAuton extends CommandGroup {
     public DoLaterAuton(double secondsToDelay, Command followingCommand) {

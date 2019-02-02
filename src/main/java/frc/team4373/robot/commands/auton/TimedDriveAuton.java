@@ -6,8 +6,6 @@ import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
  * A Javadoc template. TODO: Update TimedDriveAuton Javadoc.
- *
- * @author Samasaur
  */
 public class TimedDriveAuton extends Command {
     private double start;

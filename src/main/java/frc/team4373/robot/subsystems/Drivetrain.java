@@ -10,8 +10,6 @@ import frc.team4373.robot.commands.teleop.drivetrain.JoystickCommand;
 
 /**
  * A programmatic representation of the robot's drivetrain, which controls robot movement.
- *
- * @author Samasaur
  */
 public class Drivetrain extends Subsystem {
     public enum TalonID {
@@ -44,23 +42,16 @@ public class Drivetrain extends Subsystem {
         this.right1.setNeutralMode(NeutralMode.Brake);
         this.right2.setNeutralMode(NeutralMode.Brake);
 
+        this.left1.setInverted(true);
+        this.left2.setInverted(true);
+        this.right1.setInverted(false);
+        this.right2.setInverted(false);
+
         this.right2.follow(right1);
         this.left2.follow(left1);
 
-        this.left1.setInverted(false);
-        this.left2.setInverted(false);
-        this.right1.setInverted(true);
-        this.right2.setInverted(true);
-
-        this.right1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
-
-        this.left1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
-        this.left1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
-        this.left1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
-        this.left1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.setSensorPhase(RobotMap.DRIVETRAIN_RIGHT_ENCODER_PHASE);
+        this.left1.setSensorPhase(RobotMap.DRIVETRAIN_LEFT_ENCODER_PHASE);
 
         // this.right1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
         //         RobotMap.TALON_TIMEOUT_MS);
@@ -68,6 +59,10 @@ public class Drivetrain extends Subsystem {
         // this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
         //         RobotMap.TALON_TIMEOUT_MS);
         // this.left1.setSensorPhase(false);
+        // this.right1.config_kF(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kF);
+        // this.right1.config_kP(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kP);
+        // this.right1.config_kI(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kI);
+        // this.right1.config_kD(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kD);
 
         // Configure left encoder and publish it on Remote Sensor 0
         this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
@@ -80,11 +75,6 @@ public class Drivetrain extends Subsystem {
         this.right1.configRemoteFeedbackFilter(this.pigeon.getDeviceID(),
                 RemoteSensorSource.Pigeon_Yaw, RobotMap.REMOTE_SENSOR_1,
                 RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1,
-                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configSelectedFeedbackCoefficient(
-                RobotMap.RESOLUTION_UNITS_PER_ROTATION / RobotMap.PIGEON_UNITS_PER_ROTATION,
-                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
 
         // Configure averaging of two sides using a SensorSum
         this.right1.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0,
@@ -96,22 +86,46 @@ public class Drivetrain extends Subsystem {
         this.right1.configSelectedFeedbackSensor(FeedbackDevice.SensorSum,
                 RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
 
-        this.initialPosition = this.right1.getSelectedSensorPosition(
-                RobotMap.DRIVETRAIN_POSITION_PID_IDX);
+        // Add Pigeon as feedback sensor
+        this.right1.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1,
+                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configSelectedFeedbackCoefficient(
+                RobotMap.RESOLUTION_UNITS_PER_ROTATION / RobotMap.PIGEON_UNITS_PER_ROTATION,
+                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
 
-        this.right1.config_kF(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kF);
-        this.right1.config_kP(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kP);
-        this.right1.config_kI(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kI);
-        this.right1.config_kD(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kD);
+        this.right1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
 
-        this.left1.config_kF(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kF);
-        this.left1.config_kP(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kP);
-        this.left1.config_kI(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kI);
-        this.left1.config_kD(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kD);
+        this.left1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
+        this.left1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
+        this.left1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
+        this.left1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
 
-        this.left1.setSensorPhase(RobotMap.DRIVETRAIN_LEFT_ENCODER_PHASE);
+        this.right1.config_kF(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kF);
+        this.right1.config_kP(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kP);
+        this.right1.config_kI(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kI);
+        this.right1.config_kD(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kD);
+
+        this.right1.config_kF(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kF);
+        this.right1.config_kP(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kP);
+        this.right1.config_kI(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kI);
+        this.right1.config_kD(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+                RobotMap.DRIVETRAIN_PID_GAINS.kD);
+
         this.right1.configAuxPIDPolarity(RobotMap.DRIVETRAIN_AUX_PID_POLARITY,
                 RobotMap.TALON_TIMEOUT_MS);
+
+        this.initialPosition = this.right1.getSelectedSensorPosition(
+                RobotMap.DRIVETRAIN_POSITION_PID_IDX);
     }
 
     public void setLeft(double power) {

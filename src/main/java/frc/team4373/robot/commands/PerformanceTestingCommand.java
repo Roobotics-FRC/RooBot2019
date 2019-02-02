@@ -9,9 +9,6 @@ import java.util.HashMap;
 /**
  * Provides joystick-based control of the apparatus with a "ramping" input mechanism that caps
  * acceleration at a specific rate.
- *
- * @author aaplmath
- * @author Samasaur
  */
 public class PerformanceTestingCommand extends Command {
 

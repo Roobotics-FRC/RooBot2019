@@ -2,9 +2,6 @@ package frc.team4373.robot;
 
 /**
  * Holds various mappings and constants.
- *
- * @author aaplmath
- * @author Samasaur
  */
 
 public class RobotMap {
@@ -38,8 +35,8 @@ public class RobotMap {
     public static final PID DRIVETRAIN_PID_GAINS = new PID(0, 1,0, 0);
     public static final boolean DRIVETRAIN_AUX_PID_POLARITY = false;
     public static final int MOTION_PROFILE_BASE_TRAJ_TIMEOUT = 0;
-    public static final boolean DRIVETRAIN_RIGHT_ENCODER_PHASE = false;
-    public static final boolean DRIVETRAIN_LEFT_ENCODER_PHASE = false;
+    public static final boolean DRIVETRAIN_RIGHT_ENCODER_PHASE = true;
+    public static final boolean DRIVETRAIN_LEFT_ENCODER_PHASE = true;
 
     public static final double ENCODER_UNITS_PER_ROTATION = 4096;
     public static final double PIGEON_UNITS_PER_ROTATION = 8192;

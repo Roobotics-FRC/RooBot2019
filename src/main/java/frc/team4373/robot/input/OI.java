@@ -14,8 +14,6 @@ import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
  * OI provides access to operator interface devices.
- *
- * @author aaplmath
  */
 public class OI {
     private static OI oi = null;

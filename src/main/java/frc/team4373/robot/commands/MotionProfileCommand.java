@@ -7,8 +7,6 @@ import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
  * A command that executes one or more motion profiles concurrently on specified motors.
- *
- * @author aaplmath
  */
 public class MotionProfileCommand extends Command {
 

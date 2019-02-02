@@ -12,8 +12,6 @@ import frc.team4373.robot.commands.profiles.MotionProfile;
 
 /**
  * The class responsible for feeding a specified motion profile to a given motor.
- *
- * @author aaplmath
  */
 public class MotionProfileFeeder {
 
