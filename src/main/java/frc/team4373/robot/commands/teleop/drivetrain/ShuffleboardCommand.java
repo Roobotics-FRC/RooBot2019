@@ -47,7 +47,7 @@ public class ShuffleboardCommand extends Command {
         SmartDashboard.putNumber("Pos Error", drivetrain.getTalon(Drivetrain.TalonID.RIGHT_1)
                 .getClosedLoopError(RobotMap.DRIVETRAIN_HEADING_PID_IDX));
         SmartDashboard.putNumber("Pigeon Ang",
-                drivetrain.getSensorPosition(Drivetrain.TalonID.LEFT_2,
+                drivetrain.getSensorPosition(Drivetrain.TalonID.RIGHT_1,
                         RobotMap.DRIVETRAIN_HEADING_PID_IDX));
         SmartDashboard.putNumber("Right Pos",
                 drivetrain.getSensorPosition(Drivetrain.TalonID.RIGHT_1,

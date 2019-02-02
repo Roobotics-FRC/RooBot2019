@@ -28,8 +28,6 @@ public class Drivetrain extends Subsystem {
     private WPI_TalonSRX right2;
     private PigeonIMU pigeon;
 
-    private int initialPosition;
-
     private Drivetrain() {
         this.left1 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_MOTOR_FRONT);
         this.left2 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_MOTOR_REAR);
@@ -42,16 +40,8 @@ public class Drivetrain extends Subsystem {
         this.right1.setNeutralMode(NeutralMode.Brake);
         this.right2.setNeutralMode(NeutralMode.Brake);
 
-        this.left1.setInverted(true);
-        this.left2.setInverted(true);
-        this.right1.setInverted(false);
-        this.right2.setInverted(false);
-
         this.right2.follow(right1);
         this.left2.follow(left1);
-
-        this.right1.setSensorPhase(RobotMap.DRIVETRAIN_RIGHT_ENCODER_PHASE);
-        this.left1.setSensorPhase(RobotMap.DRIVETRAIN_LEFT_ENCODER_PHASE);
 
         // this.right1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
         //         RobotMap.TALON_TIMEOUT_MS);
@@ -76,23 +66,46 @@ public class Drivetrain extends Subsystem {
                 RemoteSensorSource.Pigeon_Yaw, RobotMap.REMOTE_SENSOR_1,
                 RobotMap.TALON_TIMEOUT_MS);
 
-        // Configure averaging of two sides using a SensorSum
+        // Configure SensorSum
         this.right1.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0,
                 RobotMap.TALON_TIMEOUT_MS);
         this.right1.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder,
                 RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configSelectedFeedbackCoefficient(0.5, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
-                RobotMap.TALON_TIMEOUT_MS);
+
+        // Set sum signal as distance sensor input
         this.right1.configSelectedFeedbackSensor(FeedbackDevice.SensorSum,
                 RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configSelectedFeedbackCoefficient(0.5, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+                RobotMap.TALON_TIMEOUT_MS);
 
-        // Add Pigeon as feedback sensor
+        // Add Pigeon as feedback sensor for heading
         this.right1.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1,
                 RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
         this.right1.configSelectedFeedbackCoefficient(
                 RobotMap.RESOLUTION_UNITS_PER_ROTATION / RobotMap.PIGEON_UNITS_PER_ROTATION,
                 RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
 
+        // Set inversions and sensor phases
+        this.left1.setInverted(false);
+        this.left2.setInverted(false);
+        this.right1.setInverted(true);
+        this.right2.setInverted(true);
+        this.right1.setSensorPhase(RobotMap.DRIVETRAIN_RIGHT_ENCODER_PHASE);
+        this.left1.setSensorPhase(RobotMap.DRIVETRAIN_LEFT_ENCODER_PHASE);
+
+        // Configuration we don't understand from the sample code
+        this.right1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20,
+                RobotMap.TALON_TIMEOUT_MS);
+        this.right1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20,
+                RobotMap.TALON_TIMEOUT_MS);
+        this.right1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20,
+                RobotMap.TALON_TIMEOUT_MS);
+        this.left1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5,
+                RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configNeutralDeadband(0.001, RobotMap.TALON_TIMEOUT_MS);
+        this.left1.configNeutralDeadband(0.001, RobotMap.TALON_TIMEOUT_MS);
+
+        // Set peak and nominal outputs
         this.right1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
         this.right1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
         this.right1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
@@ -103,6 +116,7 @@ public class Drivetrain extends Subsystem {
         this.left1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
         this.left1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
 
+        // Set PID gains
         this.right1.config_kF(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
                 RobotMap.DRIVETRAIN_PID_GAINS.kF);
         this.right1.config_kP(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
@@ -121,11 +135,17 @@ public class Drivetrain extends Subsystem {
         this.right1.config_kD(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
                 RobotMap.DRIVETRAIN_PID_GAINS.kD);
 
+        // Set time per PID loop iteration for both loops
+        int closedLoopTimeMs = 1;
+        this.right1.configClosedLoopPeriod(0, closedLoopTimeMs, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configClosedLoopPeriod(1, closedLoopTimeMs, RobotMap.TALON_TIMEOUT_MS);
+
+        // Polarity
         this.right1.configAuxPIDPolarity(RobotMap.DRIVETRAIN_AUX_PID_POLARITY,
                 RobotMap.TALON_TIMEOUT_MS);
 
-        this.initialPosition = this.right1.getSelectedSensorPosition(
-                RobotMap.DRIVETRAIN_POSITION_PID_IDX);
+        // Set starting position to 0 on sensors
+        zeroSensors();
     }
 
     public void setLeft(double power) {
@@ -151,7 +171,6 @@ public class Drivetrain extends Subsystem {
      * @param headingSetpoint the heading to maintain.
      */
     public void setPositionHeadingSetpoints(double positionSetpoint, double headingSetpoint) {
-        positionSetpoint += initialPosition;
         this.right1.set(ControlMode.Position, positionSetpoint,
                 DemandType.AuxPID, headingSetpoint);
         this.left1.follow(this.right1, FollowerType.AuxOutput1);
@@ -173,6 +192,16 @@ public class Drivetrain extends Subsystem {
             default:
                 break;
         }
+    }
+
+    /**
+     * Resets sensor values to 0.
+     */
+    public void zeroSensors() {
+        this.left1.getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_TIMEOUT_MS);
+        this.right1.getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_TIMEOUT_MS);
+        this.pigeon.setYaw(0, RobotMap.TALON_TIMEOUT_MS);
+        this.pigeon.setAccumZAngle(0, RobotMap.TALON_TIMEOUT_MS);
     }
 
     public double safetyCheckSpeed(double power) {
