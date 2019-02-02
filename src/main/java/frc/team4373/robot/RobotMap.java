@@ -49,4 +49,6 @@ public class RobotMap {
     public static final int REMOTE_SENSOR_1 = 1;
 
     public static final int TALON_TIMEOUT_MS = 1000;
+
+    public static final double VISION_ROTATOR_SPEED = 0.25;
 }
