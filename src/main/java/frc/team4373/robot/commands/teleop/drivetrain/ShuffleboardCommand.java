@@ -33,7 +33,7 @@ public class ShuffleboardCommand extends Command {
             case 1:
                 this.drivetrain.setPositionHeadingSetpoints(
                         SmartDashboard.getNumber("positionSetpointRelative", 0),
-                        SmartDashboard.getNumber("headingSetpointRelative", 0));
+                        SmartDashboard.getNumber("headingSetpoint", 0));
                 break;
             case 2:
                 break;

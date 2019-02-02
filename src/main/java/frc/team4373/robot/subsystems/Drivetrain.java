@@ -93,8 +93,8 @@ public class Drivetrain extends Subsystem {
                 RobotMap.TALON_TIMEOUT_MS);
         this.right1.configSelectedFeedbackCoefficient(0.5, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
                 RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configSelectedFeedbackSensor(FeedbackDevice.SensorSum, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
-                RobotMap.TALON_TIMEOUT_MS);
+        this.right1.configSelectedFeedbackSensor(FeedbackDevice.SensorSum,
+                RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
 
         this.initialPosition = this.right1.getSelectedSensorPosition(
                 RobotMap.DRIVETRAIN_POSITION_PID_IDX);
@@ -109,6 +109,7 @@ public class Drivetrain extends Subsystem {
         this.left1.config_kI(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kI);
         this.left1.config_kD(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kD);
 
+        this.left1.setSensorPhase(RobotMap.DRIVETRAIN_LEFT_ENCODER_PHASE);
         this.right1.configAuxPIDPolarity(RobotMap.DRIVETRAIN_AUX_PID_POLARITY,
                 RobotMap.TALON_TIMEOUT_MS);
     }
