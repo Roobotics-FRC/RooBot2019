@@ -23,6 +23,7 @@ public class VisionRotatorAuton extends Command {
     @Override
     protected void initialize() {
         this.finished = false;
+        this.awaitingFinish = false;
     }
 
     @Override
@@ -35,6 +36,7 @@ public class VisionRotatorAuton extends Command {
                 if (RobotController.getFPGATime() * 1000 - 3000000 > finishWaitStart) finished = true;
             } else {
                 this.finishWaitStart = RobotController.getFPGATime() * 1000;
+                this.awaitingFinish = true;
             }
         }
     }
