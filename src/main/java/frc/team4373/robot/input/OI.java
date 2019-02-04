@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.commands.MotionProfileCommand;
 import frc.team4373.robot.commands.PerformanceTestingCommand;
+import frc.team4373.robot.commands.auton.VisionRotatorAuton;
 import frc.team4373.robot.commands.profiles.MotionProfile;
 import frc.team4373.robot.commands.profiles.StraightProfileLeft;
 import frc.team4373.robot.commands.profiles.StraightProfileRight;
@@ -22,6 +23,7 @@ public class OI {
     private Button shuffleboardCommandButton;
     private Button mpButton;
     private Button perfButton;
+    private JoystickButton visRotButton;
 
     private OI() {
         this.driveJoystick =
@@ -37,6 +39,8 @@ public class OI {
                 new MotionProfile[] {new StraightProfileRight(), new StraightProfileLeft()}));
         this.perfButton = new JoystickButton(driveJoystick, 12);
         this.perfButton.whenPressed(new PerformanceTestingCommand());
+        this.visRotButton = new JoystickButton(driveJoystick, 9);
+        this.visRotButton.whenPressed(new VisionRotatorAuton());
     }
 
     /**
