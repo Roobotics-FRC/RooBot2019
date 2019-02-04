@@ -34,6 +34,10 @@ public class JoystickCommand extends Command {
         SmartDashboard.putNumber("Left Pos",
                 drivetrain.getSensorPosition(Drivetrain.TalonID.LEFT_1,
                         RobotMap.DRIVETRAIN_POSITION_PID_IDX));
+        SmartDashboard.putNumber("Left Power",
+                drivetrain.getOutputPercent(Drivetrain.TalonID.LEFT_1));
+        SmartDashboard.putNumber("Right Power",
+                drivetrain.getOutputPercent(Drivetrain.TalonID.RIGHT_1));
     }
 
     @Override

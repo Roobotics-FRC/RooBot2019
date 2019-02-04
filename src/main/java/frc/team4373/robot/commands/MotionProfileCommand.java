@@ -54,14 +54,10 @@ public class MotionProfileCommand extends Command {
         }
         initialized = true;
 
-        SmartDashboard.putNumber("Left1/Power",
-                this.drivetrain.getOutputPercent(Drivetrain.TalonID.LEFT_1));
-        SmartDashboard.putNumber("Left2/Power",
-                this.drivetrain.getOutputPercent(Drivetrain.TalonID.LEFT_2));
-        SmartDashboard.putNumber("Right1/Power",
-                this.drivetrain.getOutputPercent(Drivetrain.TalonID.RIGHT_1));
-        SmartDashboard.putNumber("Right2/Power",
-                this.drivetrain.getOutputPercent(Drivetrain.TalonID.RIGHT_2));
+        SmartDashboard.putNumber("Left Power",
+                drivetrain.getOutputPercent(Drivetrain.TalonID.LEFT_1));
+        SmartDashboard.putNumber("Right Power",
+                drivetrain.getOutputPercent(Drivetrain.TalonID.RIGHT_1));
     }
 
     @Override
