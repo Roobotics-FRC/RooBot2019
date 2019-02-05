@@ -43,6 +43,8 @@ public class RobotMap {
     public static final double PIGEON_UNITS_PER_ROTATION = 8192;
     public static final double RESOLUTION_UNITS_PER_ROTATION = 3600;
 
+    public static final double AUTON_TURN_SPEED = 0.25;
+
     public static final int REMOTE_SENSOR_0 = 0;
     public static final int REMOTE_SENSOR_1 = 1;
 
