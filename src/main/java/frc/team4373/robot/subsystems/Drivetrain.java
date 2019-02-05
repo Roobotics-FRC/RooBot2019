@@ -43,106 +43,100 @@ public class Drivetrain extends Subsystem {
         this.right2.follow(right1);
         this.left2.follow(left1);
 
-        // this.right1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
+        this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        this.right1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
+        // // Configure left encoder and publish it on Remote Sensor 0
+        // this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
+        //         RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configRemoteFeedbackFilter(this.left1.getDeviceID(),
+        //         RemoteSensorSource.TalonSRX_SelectedSensor, RobotMap.REMOTE_SENSOR_0,
         //         RobotMap.TALON_TIMEOUT_MS);
-        // this.right1.setSensorPhase(false);
-        // this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
+        //
+        // // Configure Pigeon on Remote Sensor 1
+        // this.right1.configRemoteFeedbackFilter(this.pigeon.getDeviceID(),
+        //         RemoteSensorSource.Pigeon_Yaw, RobotMap.REMOTE_SENSOR_1,
         //         RobotMap.TALON_TIMEOUT_MS);
-        // this.left1.setSensorPhase(false);
-        // this.right1.config_kF(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kF);
-        // this.right1.config_kP(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kP);
-        // this.right1.config_kI(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kI);
-        // this.right1.config_kD(RobotMap.DRIVETRAIN_PID_IDX, RobotMap.DRIVETRAIN_PID_GAINS.kD);
-
-        // Configure left encoder and publish it on Remote Sensor 0
-        this.left1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
-                RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configRemoteFeedbackFilter(this.left1.getDeviceID(),
-                RemoteSensorSource.TalonSRX_SelectedSensor, RobotMap.REMOTE_SENSOR_0,
-                RobotMap.TALON_TIMEOUT_MS);
-
-        // Configure Pigeon on Remote Sensor 1
-        this.right1.configRemoteFeedbackFilter(this.pigeon.getDeviceID(),
-                RemoteSensorSource.Pigeon_Yaw, RobotMap.REMOTE_SENSOR_1,
-                RobotMap.TALON_TIMEOUT_MS);
-
-        // Configure SensorSum
-        this.right1.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0,
-                RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder,
-                RobotMap.TALON_TIMEOUT_MS);
-
-        // Set sum signal as distance sensor input
-        this.right1.configSelectedFeedbackSensor(FeedbackDevice.SensorSum,
-                RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configSelectedFeedbackCoefficient(0.5, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
-                RobotMap.TALON_TIMEOUT_MS);
-
-        // Add Pigeon as feedback sensor for heading
-        this.right1.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1,
-                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configSelectedFeedbackCoefficient(
-                RobotMap.RESOLUTION_UNITS_PER_ROTATION / RobotMap.PIGEON_UNITS_PER_ROTATION,
-                RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        //
+        // // Configure SensorSum
+        // this.right1.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        //
+        // // Set sum signal as distance sensor input
+        // this.right1.configSelectedFeedbackSensor(FeedbackDevice.SensorSum,
+        //         RobotMap.DRIVETRAIN_POSITION_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configSelectedFeedbackCoefficient(0.5, RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        //
+        // // Add Pigeon as feedback sensor for heading
+        // this.right1.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1,
+        //         RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configSelectedFeedbackCoefficient(
+        //         RobotMap.RESOLUTION_UNITS_PER_ROTATION / RobotMap.PIGEON_UNITS_PER_ROTATION,
+        //         RobotMap.DRIVETRAIN_HEADING_PID_IDX, RobotMap.TALON_TIMEOUT_MS);
 
         // Set inversions and sensor phases
         this.left1.setInverted(false);
         this.left2.setInverted(false);
         this.right1.setInverted(true);
         this.right2.setInverted(true);
+        this.right1.configSelectedFeedbackCoefficient(1);
+        this.left1.configSelectedFeedbackCoefficient(1);
         this.right1.setSensorPhase(RobotMap.DRIVETRAIN_RIGHT_ENCODER_PHASE);
         this.left1.setSensorPhase(RobotMap.DRIVETRAIN_LEFT_ENCODER_PHASE);
 
-        // Configuration we don't understand from the sample code
-        this.right1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20,
-                RobotMap.TALON_TIMEOUT_MS);
-        this.right1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20,
-                RobotMap.TALON_TIMEOUT_MS);
-        this.right1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20,
-                RobotMap.TALON_TIMEOUT_MS);
-        this.left1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5,
-                RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configNeutralDeadband(0.001, RobotMap.TALON_TIMEOUT_MS);
-        this.left1.configNeutralDeadband(0.001, RobotMap.TALON_TIMEOUT_MS);
-
-        // Set peak and nominal outputs
-        this.right1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
-
-        this.left1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
-        this.left1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
-        this.left1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
-        this.left1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
-
-        // Set PID gains
-        this.right1.config_kF(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kF);
-        this.right1.config_kP(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kP);
-        this.right1.config_kI(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kI);
-        this.right1.config_kD(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kD);
-
-        this.right1.config_kF(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kF);
-        this.right1.config_kP(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kP);
-        this.right1.config_kI(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kI);
-        this.right1.config_kD(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
-                RobotMap.DRIVETRAIN_PID_GAINS.kD);
-
-        // Set time per PID loop iteration for both loops
-        int closedLoopTimeMs = 1;
-        this.right1.configClosedLoopPeriod(0, closedLoopTimeMs, RobotMap.TALON_TIMEOUT_MS);
-        this.right1.configClosedLoopPeriod(1, closedLoopTimeMs, RobotMap.TALON_TIMEOUT_MS);
-
-        // Polarity
-        this.right1.configAuxPIDPolarity(RobotMap.DRIVETRAIN_AUX_PID_POLARITY,
-                RobotMap.TALON_TIMEOUT_MS);
+        // // Configuration we don't understand from the sample code
+        // this.right1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        // this.left1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5,
+        //         RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configNeutralDeadband(0.001, RobotMap.TALON_TIMEOUT_MS);
+        // this.left1.configNeutralDeadband(0.001, RobotMap.TALON_TIMEOUT_MS);
+        //
+        // // Set peak and nominal outputs
+        // this.right1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
+        //
+        // this.left1.configNominalOutputForward(0, RobotMap.TALON_TIMEOUT_MS);
+        // this.left1.configNominalOutputReverse(0, RobotMap.TALON_TIMEOUT_MS);
+        // this.left1.configPeakOutputForward(1, RobotMap.TALON_TIMEOUT_MS);
+        // this.left1.configPeakOutputReverse(-1, RobotMap.TALON_TIMEOUT_MS);
+        //
+        // // Set PID gains
+        // this.right1.config_kF(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kF);
+        // this.right1.config_kP(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kP);
+        // this.right1.config_kI(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kI);
+        // this.right1.config_kD(RobotMap.DRIVETRAIN_HEADING_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kD);
+        //
+        // this.right1.config_kF(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kF);
+        // this.right1.config_kP(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kP);
+        // this.right1.config_kI(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kI);
+        // this.right1.config_kD(RobotMap.DRIVETRAIN_POSITION_PID_IDX,
+        //         RobotMap.DRIVETRAIN_PID_GAINS.kD);
+        //
+        // // Set time per PID loop iteration for both loops
+        // int closedLoopTimeMs = 1;
+        // this.right1.configClosedLoopPeriod(0, closedLoopTimeMs, RobotMap.TALON_TIMEOUT_MS);
+        // this.right1.configClosedLoopPeriod(1, closedLoopTimeMs, RobotMap.TALON_TIMEOUT_MS);
+        //
+        // // Polarity
+        // this.right1.configAuxPIDPolarity(RobotMap.DRIVETRAIN_AUX_PID_POLARITY,
+        //         RobotMap.TALON_TIMEOUT_MS);
 
         // Set starting position to 0 on sensors
         zeroSensors();
@@ -254,6 +248,16 @@ public class Drivetrain extends Subsystem {
      */
     public int getSensorPosition(TalonID talonID, int pidIdx) {
         return getTalon(talonID).getSelectedSensorPosition(pidIdx);
+    }
+
+    /**
+     * Returns the Pigeon yaw value.
+     * @return Pigeon yaw value.
+     */
+    public double getPigeonYaw() {
+        double[] ypr = new double[3];
+        this.pigeon.getYawPitchRoll(ypr);
+        return ypr[0];
     }
 
 

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.commands.MotionProfileCommand;
 import frc.team4373.robot.commands.PerformanceTestingCommand;
+import frc.team4373.robot.commands.auton.DriveDistanceAuton;
 import frc.team4373.robot.commands.auton.VisionRotatorAuton;
 import frc.team4373.robot.commands.profiles.MotionProfile;
 import frc.team4373.robot.commands.profiles.StraightProfileLeft;
@@ -24,6 +25,7 @@ public class OI {
     private Button mpButton;
     private Button perfButton;
     private JoystickButton visRotButton;
+    private JoystickButton manualPIDButton;
 
     private OI() {
         this.driveJoystick =
@@ -41,6 +43,8 @@ public class OI {
         this.perfButton.whenPressed(new PerformanceTestingCommand());
         this.visRotButton = new JoystickButton(driveJoystick, 9);
         this.visRotButton.whenPressed(new VisionRotatorAuton());
+        this.manualPIDButton = new JoystickButton(driveJoystick, 8);
+        this.manualPIDButton.whenPressed(new DriveDistanceAuton(240, 0.25));
     }
 
     /**
