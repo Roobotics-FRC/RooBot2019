@@ -30,7 +30,6 @@ public class TurnToAngleAuton extends PIDCommand {
         this.speed = speed;
         requires(this.drivetrain = Drivetrain.getInstance());
         setInterruptible(true);
-        setTimeout(2);
     }
 
     @Override
@@ -40,6 +39,9 @@ public class TurnToAngleAuton extends PIDCommand {
         this.getPIDController().setOutputRange(-RobotMap.AUTON_TURN_SPEED, RobotMap.AUTON_TURN_SPEED);
         this.getPIDController().setPID(RobotMap.DRIVETRAIN_ANG_PID_GAINS.kP,
                 RobotMap.DRIVETRAIN_ANG_PID_GAINS.kI, RobotMap.DRIVETRAIN_ANG_PID_GAINS.kD);
+
+        // timeout fallback if finished checking is unreliable
+        // this.setTimeout(2);
     }
 
     @Override
@@ -67,11 +69,15 @@ public class TurnToAngleAuton extends PIDCommand {
     @Override
     protected boolean isFinished() {
         return this.finished;
+
+        // timeout fallback if finished checking is unreliable
+        // return this.finished || this.isTimedOut();
     }
 
     @Override
     protected void end() {
         this.getPIDController().reset();
+        this.drivetrain.setBoth(0);
     }
 
     @Override

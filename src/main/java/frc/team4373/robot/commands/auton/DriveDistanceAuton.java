@@ -96,21 +96,14 @@ public class DriveDistanceAuton extends PIDCommand {
         SmartDashboard.putNumber("Left Power", drivetrain.getOutputPercent(Drivetrain.TalonID.LEFT_1));
     }
 
-    @Override
-    protected boolean isFinished() {
-        return Math.abs(this.distancePIDOutput) < cooldownThreshold;
-    }
-
-    @Override
-    protected void interrupted() {
-        this.getPIDController().reset();
-        this.distancePIDController.reset();
-        this.drivetrain.setBoth(0);
-    }
-
     private int getAveragePosition() {
         return (this.drivetrain.getSensorPosition(Drivetrain.TalonID.RIGHT_1) +
                 this.drivetrain.getSensorPosition(Drivetrain.TalonID.LEFT_1)) / 2;
+    }
+
+    @Override
+    protected boolean isFinished() {
+        return Math.abs(this.distancePIDOutput) < cooldownThreshold;
     }
 
     @Override
@@ -118,5 +111,10 @@ public class DriveDistanceAuton extends PIDCommand {
         this.getPIDController().reset();
         this.distancePIDController.reset();
         this.drivetrain.setBoth(0);
+    }
+
+    @Override
+    protected void interrupted() {
+        this.end();
     }
 }
