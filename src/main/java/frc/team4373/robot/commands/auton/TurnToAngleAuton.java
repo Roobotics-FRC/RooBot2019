@@ -1,6 +1,7 @@
 package frc.team4373.robot.commands.auton;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.subsystems.Drivetrain;
 
@@ -34,8 +35,8 @@ public class TurnToAngleAuton extends PIDCommand {
 
     @Override
     protected void initialize() {
-        this.setSetpoint(setpoint);
-        this.setInputRange(-180, 180);
+        this.finished = this.coolingDown = false;
+        this.setSetpoint(drivetrain.getPigeonYaw() + setpoint);
         this.getPIDController().setOutputRange(-RobotMap.AUTON_TURN_SPEED, RobotMap.AUTON_TURN_SPEED);
         this.getPIDController().setPID(RobotMap.DRIVETRAIN_ANG_PID_GAINS.kP,
                 RobotMap.DRIVETRAIN_ANG_PID_GAINS.kI, RobotMap.DRIVETRAIN_ANG_PID_GAINS.kD);
@@ -51,19 +52,19 @@ public class TurnToAngleAuton extends PIDCommand {
 
     @Override
     protected void usePIDOutput(double output) {
-        if (Math.abs(output) < COOLDOWN_THRESHOLD) {
-            this.coolingDown = true;
-            this.cooldownStart = System.currentTimeMillis();
-        }
         if (coolingDown) {
             if (System.currentTimeMillis() - COOLDOWN_TIME > this.cooldownStart) {
                 this.finished = true;
                 this.drivetrain.setBoth(0);
                 return;
             }
+        } else if (Math.abs(output) < COOLDOWN_THRESHOLD) {
+            this.coolingDown = true;
+            this.cooldownStart = System.currentTimeMillis();
         }
-        this.drivetrain.setLeft(-output);
+
         this.drivetrain.setRight(output);
+        this.drivetrain.setLeft(-output);
     }
 
     @Override

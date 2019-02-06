@@ -77,7 +77,6 @@ public class DriveDistanceAuton extends PIDCommand {
 
         // Angular PID configuration
         this.setSetpoint(drivetrain.getPigeonYaw());
-        this.setInputRange(-180, 180);
         this.getPIDController().setOutputRange(-robotSpeed, robotSpeed);
     }
 

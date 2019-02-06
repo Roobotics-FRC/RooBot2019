@@ -32,7 +32,7 @@ public class RobotMap {
     public static final int DRIVETRAIN_PID_IDX = 0;
     public static final int DRIVETRAIN_POSITION_PID_IDX = 0;
     public static final int DRIVETRAIN_HEADING_PID_IDX = 1;
-    public static final PID DRIVETRAIN_ANG_PID_GAINS = new PID(0, 0.005,0, 0);
+    public static final PID DRIVETRAIN_ANG_PID_GAINS = new PID(0, 0.01,0, 0);
     public static final PID DRIVETRAIN_DIST_PID_GAINS = new PID(0, 0.001,0, 0);
     public static final boolean DRIVETRAIN_AUX_PID_POLARITY = false;
     public static final int MOTION_PROFILE_BASE_TRAJ_TIMEOUT = 0;
