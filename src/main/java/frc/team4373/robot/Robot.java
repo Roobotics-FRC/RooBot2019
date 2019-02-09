@@ -1,13 +1,9 @@
 package frc.team4373.robot;
 
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team4373.robot.commands.teleop.drivetrain.ShuffleboardCommand;
 import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
@@ -80,6 +76,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        SmartDashboard.putNumber("Pidgeon Ang", Drivetrain.getInstance().getPigeonYaw());
     }
 
     /**

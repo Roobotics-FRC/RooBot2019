@@ -1,34 +1,22 @@
 package frc.team4373.robot.input;
 
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
-import frc.team4373.robot.commands.MotionProfileCommand;
-import frc.team4373.robot.commands.PerformanceTestingCommand;
-import frc.team4373.robot.commands.auton.ApproachVisionTargetAuton;
-import frc.team4373.robot.commands.auton.DriveDistanceAuton;
-import frc.team4373.robot.commands.auton.TurnToAngleAuton;
-import frc.team4373.robot.commands.auton.VisionRotatorAuton;
-import frc.team4373.robot.commands.profiles.MotionProfile;
-import frc.team4373.robot.commands.profiles.StraightProfileLeft;
-import frc.team4373.robot.commands.profiles.StraightProfileRight;
-import frc.team4373.robot.commands.teleop.drivetrain.ShuffleboardCommand;
+import frc.team4373.robot.commands.auton.sequences.*;
 import frc.team4373.robot.input.filters.FineGrainedPiecewiseFilter;
-import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
  * OI provides access to operator interface devices.
  */
 public class OI {
     private static OI oi = null;
+    private JoystickButton csrightcargo;
+    private JoystickButton csleftcargo;
+    private JoystickButton csrighthatch;
+    private JoystickButton cslefthatch;
     private RooJoystick<FineGrainedPiecewiseFilter> driveJoystick;
     private RooJoystick operatorJoystick;
-    private Button shuffleboardCommandButton;
-    private Button mpButton;
-    private Button perfButton;
-    private JoystickButton visRotButton;
-    private JoystickButton manualPIDButton;
-    private JoystickButton visionApproachButton;
+    private JoystickButton CSFrontHatchAutonButton;
 
     private OI() {
         this.driveJoystick =
@@ -36,21 +24,20 @@ public class OI {
         this.operatorJoystick =
                 new RooJoystick<>(RobotMap.OPERATOR_JOYSTICK_PORT,
                         new FineGrainedPiecewiseFilter());
-        shuffleboardCommandButton = new JoystickButton(driveJoystick, 11);
-        shuffleboardCommandButton.whenPressed(new ShuffleboardCommand());
-        this.mpButton = new JoystickButton(this.driveJoystick, 5);
-        this.mpButton.whenPressed(new MotionProfileCommand(
-                new Drivetrain.TalonID[] {Drivetrain.TalonID.RIGHT_1, Drivetrain.TalonID.LEFT_1},
-                new MotionProfile[] {new StraightProfileRight(), new StraightProfileLeft()}));
-        this.perfButton = new JoystickButton(driveJoystick, 12);
-        this.perfButton.whenPressed(new PerformanceTestingCommand());
-        this.visRotButton = new JoystickButton(driveJoystick, 9);
-        this.visRotButton.whenPressed(new VisionRotatorAuton());
-        this.manualPIDButton = new JoystickButton(driveJoystick, 8);
-        this.manualPIDButton.whenPressed(new DriveDistanceAuton(240, 0.25));
-        this.visionApproachButton = new JoystickButton(driveJoystick, 10);
-        this.visionApproachButton.whenPressed(new ApproachVisionTargetAuton(108));
-        // this.manualPIDButton.whenPressed(new TurnToAngleAuton(90, 0.25));
+        this.CSFrontHatchAutonButton = new JoystickButton(driveJoystick, 2);
+        this.CSFrontHatchAutonButton.whenPressed(new CSFrontHatchAuton());
+
+        this.cslefthatch = new JoystickButton(driveJoystick, 11);
+        this.cslefthatch.whenPressed(new CSSideHatchAuton(RobotMap.Side.LEFT, RobotMap.CargoShipPort.NEAR));
+
+        this.csrighthatch = new JoystickButton(driveJoystick, 12);
+        this.csrighthatch.whenPressed(new CSSideHatchAuton(RobotMap.Side.RIGHT, RobotMap.CargoShipPort.NEAR));
+
+        this.csleftcargo = new JoystickButton(driveJoystick, 9);
+        this.csleftcargo.whenPressed(new CSSideCargoAuton(RobotMap.Side.LEFT, RobotMap.CargoShipPort.NEAR));
+
+        this.csrightcargo = new JoystickButton(driveJoystick, 10);
+        this.csrightcargo.whenPressed(new CSSideCargoAuton(RobotMap.Side.RIGHT, RobotMap.CargoShipPort.NEAR));
     }
 
     /**
