@@ -33,6 +33,10 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("positionSetpointRelative", 0);
         SmartDashboard.putNumber("headingSetpoint", 0);
         SmartDashboard.putBoolean("shuffleboardCommandRunning", false);
+
+        SmartDashboard.putNumber("kP", 0);
+        SmartDashboard.putNumber("kI", 0);
+        SmartDashboard.putNumber("kD", 0);
     }
 
     /**

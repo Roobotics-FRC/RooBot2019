@@ -14,7 +14,7 @@ public class RobotMap {
     public static final int RIGHT_DRIVE_MOTOR_REAR = 2;
 
     public static final int GYRO_CHANNEL = 0;
-    public static final double AUTON_LONG_DRIVE_SPEED = 0.25; //Was 1, but was too fast.
+    public static final double AUTON_LONG_DRIVE_SPEED = 0.5; //Was 1, but was too fast.
 
     public enum CargoShipPort {
         NEAR, MIDDLE, FAR
@@ -42,9 +42,10 @@ public class RobotMap {
     public static final int DRIVETRAIN_POSITION_PID_IDX = 0;
     public static final int DRIVETRAIN_HEADING_PID_IDX = 1;
     public static final PID DRIVETRAIN_ANG_PID_GAINS = new PID(0, 0.01,0, 0);
-     public static final PID DRIVETRAIN_DIST_PID_GAINS = new PID(0, 0.001,0, 0);
+    public static final PID DRIVETRAIN_DIST_PID_GAINS = new PID(0, 0.001,0, 0);
+    public static final PID DRIVETRAIN_VIS_APPR_PID_GAINS = new PID(0, 0.03,0.001, 0);
 //    public static final PID DRIVETRAIN_DIST_PID_GAINS = new PID(0, 0.1,0, 0);
-    public static final double AUTON_VISION_APPROACH_SPEED = 0.1;
+    public static final double AUTON_VISION_APPROACH_SPEED = 0.2;
     public static final int ALLOWABLE_VISION_ERRORS = 3;
     public static final boolean DRIVETRAIN_AUX_PID_POLARITY = false;
     public static final int MOTION_PROFILE_BASE_TRAJ_TIMEOUT = 0;
