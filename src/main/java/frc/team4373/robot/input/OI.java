@@ -2,6 +2,7 @@ package frc.team4373.robot.input;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
+import frc.team4373.robot.commands.ClearSubsystemCommand;
 import frc.team4373.robot.commands.auton.sequences.*;
 import frc.team4373.robot.input.filters.FineGrainedPiecewiseFilter;
 
@@ -17,6 +18,7 @@ public class OI {
     private RooJoystick<FineGrainedPiecewiseFilter> driveJoystick;
     private RooJoystick operatorJoystick;
     private JoystickButton CSFrontHatchAutonButton;
+    private JoystickButton killSwitch;
 
     private OI() {
         this.driveJoystick =
@@ -38,6 +40,9 @@ public class OI {
 
         this.csrightcargo = new JoystickButton(driveJoystick, 10);
         this.csrightcargo.whenPressed(new CSSideCargoAuton(RobotMap.Side.RIGHT, RobotMap.CargoShipPort.NEAR));
+
+        this.killSwitch = new JoystickButton(driveJoystick, 5);
+        this.killSwitch.whenPressed(new ClearSubsystemCommand());
     }
 
     /**
