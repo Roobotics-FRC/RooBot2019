@@ -133,83 +133,83 @@ public class Robot extends TimedRobot {
             } else if (objective.equals("drive")) {
                 SmartDashboard.putString("Activated Auton", "Drive");
             }
+        } else if (objective.equals("drive")) {
+            SmartDashboard.putString("Activated Auton", "Drive");
         } else if (components.length > 2) {
-            switch (components[0]) {
-                case "cs":
-                    RobotMap.CargoShipPort port;
-                    switch (components[2]) {
-                        case "s1":
-                            port = RobotMap.CargoShipPort.NEAR;
-                            SmartDashboard.putString("Activated Auton", "CS Side Near");
-                            break;
-                        case "s2":
-                            port = RobotMap.CargoShipPort.MIDDLE;
-                            SmartDashboard.putString("Activated Auton", "CS Side Middle");
-                            break;
-                        case "s3":
-                            port = RobotMap.CargoShipPort.FAR;
-                            SmartDashboard.putString("Activated Auton", "CS Side Far");
-                            break;
-                        default:
-                            port = RobotMap.CargoShipPort.NEAR;
-                            SmartDashboard.putString("Activated Auton", "CS Side Near");
-                    }
-                    if (components[1].equals("cargo")) {
-                    } else if (components[1].equals("hatch")) {
-                    }
-                    break;
-                case "r":
-                    if (components[1].equals("cargo")) {
-                        RobotMap.RocketHeight height;
+                switch (components[0]) {
+                    case "cs":
+                        RobotMap.CargoShipPort port;
                         switch (components[2]) {
-                            case "hi":
-                                height = RobotMap.RocketHeight.HIGH;
-                                SmartDashboard.putString("Activated Auton", "R Cargo High");
+                            case "s1":
+                                port = RobotMap.CargoShipPort.NEAR;
+                                SmartDashboard.putString("Activated Auton", "CS Side Near");
                                 break;
-                            case "mid":
-                                height = RobotMap.RocketHeight.MIDDLE;
-                                SmartDashboard.putString("Activated Auton", "R Cargo Middle");
+                            case "s2":
+                                port = RobotMap.CargoShipPort.MIDDLE;
+                                SmartDashboard.putString("Activated Auton", "CS Side Middle");
+                                break;
+                            case "s3":
+                                port = RobotMap.CargoShipPort.FAR;
+                                SmartDashboard.putString("Activated Auton", "CS Side Far");
                                 break;
                             default:
-                                height = RobotMap.RocketHeight.LOW;
-                                SmartDashboard.putString("Activated Auton", "R Cargo Low");
-                                break;
+                                port = RobotMap.CargoShipPort.NEAR;
+                                SmartDashboard.putString("Activated Auton", "CS Side Near");
                         }
-                    } else if (components[1].equals("hatch") && components.length > 3) {
-                        StringBuilder activatedAuton = new StringBuilder();
-                        activatedAuton.append("R Hatch");
+                        if (components[1].equals("cargo")) {
+                        } else if (components[1].equals("hatch")) {
+                        }
+                        break;
+                    case "r":
+                        if (components[1].equals("cargo")) {
+                            RobotMap.RocketHeight height;
+                            switch (components[2]) {
+                                case "hi":
+                                    height = RobotMap.RocketHeight.HIGH;
+                                    SmartDashboard.putString("Activated Auton", "R Cargo High");
+                                    break;
+                                case "mid":
+                                    height = RobotMap.RocketHeight.MIDDLE;
+                                    SmartDashboard.putString("Activated Auton", "R Cargo Middle");
+                                    break;
+                                default:
+                                    height = RobotMap.RocketHeight.LOW;
+                                    SmartDashboard.putString("Activated Auton", "R Cargo Low");
+                                    break;
+                            }
+                        } else if (components[1].equals("hatch") && components.length > 3) {
+                            StringBuilder activatedAuton = new StringBuilder();
+                            activatedAuton.append("R Hatch");
 
-                        RobotMap.RocketHatchPanel panelLoc;
-                        RobotMap.RocketHeight height;
-                        if (components[2].equals("far")) {
-                            panelLoc = RobotMap.RocketHatchPanel.FAR;
-                            activatedAuton.append(" Far ");
-                        } else {
-                            panelLoc = RobotMap.RocketHatchPanel.NEAR;
-                            activatedAuton.append(" Near ");
+                            RobotMap.RocketHatchPanel panelLoc;
+                            RobotMap.RocketHeight height;
+                            if (components[2].equals("far")) {
+                                panelLoc = RobotMap.RocketHatchPanel.FAR;
+                                activatedAuton.append(" Far ");
+                            } else {
+                                panelLoc = RobotMap.RocketHatchPanel.NEAR;
+                                activatedAuton.append(" Near ");
+                            }
+                            switch (components[3]) {
+                                case "hi":
+                                    height = RobotMap.RocketHeight.HIGH;
+                                    activatedAuton.append("High");
+                                    break;
+                                case "mid":
+                                    height = RobotMap.RocketHeight.MIDDLE;
+                                    activatedAuton.append("Middle");
+                                    break;
+                                default:
+                                    height = RobotMap.RocketHeight.LOW;
+                                    activatedAuton.append("Low");
+                                    break;
+                            }
+                            SmartDashboard.putString("Activated Auton", activatedAuton.toString());
                         }
-                        switch (components[3]) {
-                            case "hi":
-                                height = RobotMap.RocketHeight.HIGH;
-                                activatedAuton.append("High");
-                                break;
-                            case "mid":
-                                height = RobotMap.RocketHeight.MIDDLE;
-                                activatedAuton.append("Middle");
-                                break;
-                            default:
-                                height = RobotMap.RocketHeight.LOW;
-                                activatedAuton.append("Low");
-                                break;
-                        }
-                        SmartDashboard.putString("Activated Auton", activatedAuton.toString());
-                    }
-                    break;
-                case "drive":
-                    SmartDashboard.putString("Activated Auton", "Drive");
-                    break;
-                default:
-                    SmartDashboard.putString("Activated Auton", "Drive");
+                        break;
+                    default:
+                        SmartDashboard.putString("Activated Auton", "Drive");
+                }
             }
         }
     }
