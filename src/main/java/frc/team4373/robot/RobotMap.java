@@ -24,6 +24,14 @@ public class RobotMap {
         LEFT, MIDDLE, RIGHT
     }
 
+    public enum RocketHeight {
+        HIGH, MIDDLE, LOW
+    }
+
+    public enum RocketHatchPanel {
+        FAR, NEAR
+    }
+
     public static class PID {
         public double kF;
         public double kP;
@@ -64,4 +72,5 @@ public class RobotMap {
     public static final int TALON_TIMEOUT_MS = 1000;
 
     public static final double VISION_ROTATOR_SPEED = 0.1;
+
 }

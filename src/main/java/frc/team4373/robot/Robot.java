@@ -4,7 +4,14 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team4373.robot.commands.auton.sequences.CSFrontHatchAuton;
+import frc.team4373.robot.commands.auton.sequences.CSSideCargoAuton;
+import frc.team4373.robot.commands.auton.sequences.CSSideHatchAuton;
+import frc.team4373.robot.commands.auton.sequences.DriveForwardAuton;
 import frc.team4373.robot.subsystems.Drivetrain;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -15,6 +22,36 @@ import frc.team4373.robot.subsystems.Drivetrain;
  */
 public class Robot extends TimedRobot {
     private SendableChooser<Integer> shuffleboardCommandMode;
+    private SendableChooser<String> objectiveChooser = new SendableChooser<>();
+    private SendableChooser<String> positionChooser = new SendableChooser<>();
+
+    Map<String, String> autonEntries;
+
+    /**
+     * Constructor for the Robot class. Variable initialization occurs here;
+     * WPILib-related setup should occur in {@link #robotInit}.
+     */
+    public Robot() {
+        autonEntries = new LinkedHashMap<>();
+        autonEntries.put("Drive Forward", "drive");
+        autonEntries.put("CS Side Cargo 1", "cs.cargo.s1");
+        autonEntries.put("CS Side Cargo 2", "cs.cargo.s2");
+        autonEntries.put("CS Side Cargo 3", "cs.cargo.s3");
+        autonEntries.put("CS Side Hatch 1", "cs.hatch.s1");
+        autonEntries.put("CS Side Hatch 2", "cs.hatch.s2");
+        autonEntries.put("CS Side Hatch 3", "cs.hatch.s3");
+        autonEntries.put("CS Front Hatch", "cs.hatchF");
+        autonEntries.put("R Cargo Low", "r.cargo.low");
+        autonEntries.put("R Cargo Med", "r.cargo.med");
+        autonEntries.put("R Cargo Hi", "r.cargo.hi");
+        autonEntries.put("R Hatch 1 Low", "r.hatch.near.low");
+        autonEntries.put("R Hatch 1 Mid", "r.hatch.near.mid");
+        autonEntries.put("R Hatch 1 Hi", "r.hatch.near.hi");
+        autonEntries.put("R Hatch 2 Low", "r.hatch.far.low");
+        autonEntries.put("R Hatch 2 Mid", "r.hatch.far.mid");
+        autonEntries.put("R Hatch 2 Hi", "r.hatch.far.hi");
+    }
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -37,6 +74,26 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("kP", 0);
         SmartDashboard.putNumber("kI", 0);
         SmartDashboard.putNumber("kD", 0);
+
+        // Populate dashboard
+        boolean isFirstEntry = true;
+        for (Map.Entry<String, String> entry: autonEntries.entrySet()) {
+            if (isFirstEntry) {
+                objectiveChooser.setDefaultOption(entry.getKey(), entry.getValue());
+                isFirstEntry = false;
+            } else {
+                objectiveChooser.addOption(entry.getKey(), entry.getValue());
+            }
+        }
+        SmartDashboard.putData("Objective", objectiveChooser);
+
+        positionChooser.setDefaultOption("Center", "center");
+        positionChooser.addOption("Left", "left");
+        positionChooser.addOption("Right", "right");
+        SmartDashboard.putData("Start Pos", positionChooser);
+
+        SmartDashboard.putBoolean("Auton OK", true);
+        SmartDashboard.putString("Activated Auton", "None");
     }
 
     /**
@@ -56,7 +113,103 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        RobotMap.Side pos;
+        switch (positionChooser.getSelected()) {
+            case "left":
+                pos = RobotMap.Side.LEFT;
+                break;
+            case "right":
+                pos = RobotMap.Side.RIGHT;
+                break;
+            default:
+                pos = RobotMap.Side.MIDDLE;
+        }
+        String objective = objectiveChooser.getSelected();
+        String[] components = objective.split(".");
 
+        if (pos == RobotMap.Side.MIDDLE) {
+            if (objective.equals("cs.hatchF")) {
+            } else if (objective.equals("drive")) {
+            }
+        } else if (components.length > 2) {
+            switch (components[0]) {
+                case "cs":
+                    RobotMap.CargoShipPort port;
+                    switch (components[2]) {
+                        case "s1":
+                            port = RobotMap.CargoShipPort.NEAR;
+                            SmartDashboard.putString("Activated Auton", "CS Side Near");
+                            break;
+                        case "s2":
+                            port = RobotMap.CargoShipPort.MIDDLE;
+                            SmartDashboard.putString("Activated Auton", "CS Side Middle");
+                            break;
+                        case "s3":
+                            port = RobotMap.CargoShipPort.FAR;
+                            SmartDashboard.putString("Activated Auton", "CS Side Far");
+                            break;
+                        default:
+                            port = RobotMap.CargoShipPort.NEAR;
+                            SmartDashboard.putString("Activated Auton", "CS Side Near");
+                    }
+                    if (components[1].equals("cargo")) {
+                    } else if (components[1].equals("hatch")) {
+                    }
+                    break;
+                case "r":
+                    if (components[1].equals("cargo")) {
+                        RobotMap.RocketHeight height;
+                        switch (components[2]) {
+                            case "hi":
+                                height = RobotMap.RocketHeight.HIGH;
+                                SmartDashboard.putString("Activated Auton", "R Cargo High");
+                                break;
+                            case "mid":
+                                height = RobotMap.RocketHeight.MIDDLE;
+                                SmartDashboard.putString("Activated Auton", "R Cargo Middle");
+                                break;
+                            default:
+                                height = RobotMap.RocketHeight.LOW;
+                                SmartDashboard.putString("Activated Auton", "R Cargo Low");
+                                break;
+                        }
+                    } else if (components[1].equals("hatch") && components.length > 3) {
+                        StringBuilder activatedAuton = new StringBuilder();
+                        activatedAuton.append("R Hatch");
+
+                        RobotMap.RocketHatchPanel panelLoc;
+                        RobotMap.RocketHeight height;
+                        if (components[2].equals("far")) {
+                            panelLoc = RobotMap.RocketHatchPanel.FAR;
+                            activatedAuton.append(" Far ");
+                        } else {
+                            panelLoc = RobotMap.RocketHatchPanel.NEAR;
+                            activatedAuton.append(" Near ");
+                        }
+                        switch (components[3]) {
+                            case "hi":
+                                height = RobotMap.RocketHeight.HIGH;
+                                activatedAuton.append("High");
+                                break;
+                            case "mid":
+                                height = RobotMap.RocketHeight.MIDDLE;
+                                activatedAuton.append("Middle");
+                                break;
+                            default:
+                                height = RobotMap.RocketHeight.LOW;
+                                activatedAuton.append("Low");
+                                break;
+                        }
+                        SmartDashboard.putString("Activated Auton", activatedAuton.toString());
+                    }
+                    break;
+                case "drive":
+                    SmartDashboard.putString("Activated Auton", "Drive");
+                    break;
+                default:
+                    SmartDashboard.putString("Activated Auton", "Drive");
+            }
+        }
     }
 
     /**
@@ -88,5 +241,59 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {
+    }
+
+    /**
+     * This function runs periodically in disabled mode.
+     * It is used to verify that the selected auton configuration is legal.
+     * <br>
+     * <b>UNDER NO CIRCUMSTANCES SHOULD SUBSYSTEMS BE ACCESSED OR ENGAGED IN THIS METHOD.</b>
+     */
+    @Override
+    public void disabledPeriodic() {
+        String positionSelection = positionChooser.getSelected();
+        RobotMap.Side pos;
+        switch (positionSelection) {
+            case "left":
+                pos = RobotMap.Side.LEFT;
+                break;
+            case "right":
+                pos = RobotMap.Side.RIGHT;
+                break;
+            case "center":
+                pos = RobotMap.Side.MIDDLE;
+                break;
+            default:
+                SmartDashboard.putBoolean("Auton OK", false);
+                return;
+        }
+
+        String objective = objectiveChooser.getSelected();
+        String[] components = objective.split(".");
+
+        if (components.length == 0) {
+            SmartDashboard.putBoolean("Auton OK", false);
+            return;
+        }
+
+        if (pos == RobotMap.Side.MIDDLE) {
+            if (components[0].equals("cs.hatchF") || components[0].equals("drive")) {
+                SmartDashboard.putBoolean("Auton OK", true);
+                return;
+            } else {
+                SmartDashboard.putBoolean("Auton OK", false);
+                return;
+            }
+        } else if (pos == RobotMap.Side.LEFT || pos == RobotMap.Side.RIGHT) {
+            if (!objective.equals("cs.hatchF") && autonEntries.containsValue(objective)) {
+                SmartDashboard.putBoolean("Auton OK", true);
+                return;
+            } else {
+                SmartDashboard.putBoolean("Auton OK", false);
+                return;
+            }
+        }
+
+        SmartDashboard.putBoolean("Auton OK", false);
     }
 }
