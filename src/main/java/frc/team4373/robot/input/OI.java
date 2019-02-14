@@ -3,6 +3,7 @@ package frc.team4373.robot.input;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.commands.ClearSubsystemCommand;
+import frc.team4373.robot.commands.ToggleLightRingCommand;
 import frc.team4373.robot.commands.auton.sequences.*;
 import frc.team4373.robot.input.filters.FineGrainedPiecewiseFilter;
 

@@ -168,7 +168,7 @@ public class Drivetrain extends Subsystem {
     */
     public void enableLightRing(boolean enable) {
         if (enable) {
-            this.lightRingRelay.set(Relay.Value.kOn);
+            this.lightRingRelay.set(Relay.Value.kForward);
         } else {
             this.lightRingRelay.set(Relay.Value.kOff);
         }
