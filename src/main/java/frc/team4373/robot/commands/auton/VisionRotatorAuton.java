@@ -22,6 +22,7 @@ public class VisionRotatorAuton extends Command {
 
     @Override
     protected void initialize() {
+        this.drivetrain.enableLightRing(true);
         this.finished = false;
         this.awaitingFinish = false;
     }
@@ -48,7 +49,7 @@ public class VisionRotatorAuton extends Command {
 
     @Override
     protected void end() {
-
+        this.drivetrain.enableLightRing(false);
     }
 
     @Override

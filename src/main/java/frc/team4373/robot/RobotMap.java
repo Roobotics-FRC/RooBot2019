@@ -12,6 +12,7 @@ public class RobotMap {
     public static final int LEFT_DRIVE_MOTOR_REAR = 4;
     public static final int RIGHT_DRIVE_MOTOR_FRONT = 1;
     public static final int RIGHT_DRIVE_MOTOR_REAR = 2;
+    public static final int LIGHT_RING_RELAY_CHANNEL = 3;
 
     public static final int GYRO_CHANNEL = 0;
     public static final double AUTON_LONG_DRIVE_SPEED = 0.5; //Was 1, but was too fast.

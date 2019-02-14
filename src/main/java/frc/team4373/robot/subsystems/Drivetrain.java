@@ -4,6 +4,7 @@ import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.commands.teleop.drivetrain.JoystickCommand;
@@ -27,6 +28,7 @@ public class Drivetrain extends Subsystem {
     private WPI_TalonSRX right1;
     private WPI_TalonSRX right2;
     private PigeonIMU pigeon;
+    private Relay lightRingRelay;
 
     private Drivetrain() {
         this.left1 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_MOTOR_FRONT);
@@ -34,6 +36,7 @@ public class Drivetrain extends Subsystem {
         this.right1 = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_MOTOR_FRONT);
         this.right2 = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_MOTOR_REAR);
         this.pigeon = new PigeonIMU(this.left2);
+        this.lightRingRelay = new Relay(RobotMap.LIGHT_RING_RELAY_CHANNEL);
 
         this.left1.setNeutralMode(NeutralMode.Brake);
         this.left2.setNeutralMode(NeutralMode.Brake);
@@ -157,6 +160,18 @@ public class Drivetrain extends Subsystem {
     public void setBoth(double power) {
         this.setLeft(power);
         this.setRight(power);
+    }
+
+    /**
+     * Turns the light ring on and off.
+     * @param enable whether to enable the light ring.
+    */
+    public void enableLightRing(boolean enable) {
+        if (enable) {
+            this.lightRingRelay.set(Relay.Value.kOn);
+        } else {
+            this.lightRingRelay.set(Relay.Value.kOff);
+        }
     }
 
     /**
