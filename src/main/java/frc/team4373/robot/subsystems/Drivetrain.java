@@ -175,6 +175,14 @@ public class Drivetrain extends Subsystem {
     }
 
     /**
+     * Whether the light ring is currently on.
+     * @return whether the ring is on.
+     */
+    public boolean getLightRingEnabled() {
+        return this.lightRingRelay.get() == Relay.Value.kForward;
+    }
+
+    /**
      * Sets setpoints for position and heading.
      * @param positionSetpoint the position to achieve relative to the start.
      * @param headingSetpoint the heading to maintain.

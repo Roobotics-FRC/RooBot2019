@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.commands.ClearSubsystemCommand;
 import frc.team4373.robot.commands.ToggleLightRingCommand;
+import frc.team4373.robot.commands.auton.VisionRotatorAuton;
 import frc.team4373.robot.commands.auton.sequences.*;
 import frc.team4373.robot.input.filters.FineGrainedPiecewiseFilter;
 
@@ -19,6 +20,7 @@ public class OI {
     private RooJoystick<FineGrainedPiecewiseFilter> driveJoystick;
     private RooJoystick operatorJoystick;
     private JoystickButton CSFrontHatchAutonButton;
+    private JoystickButton lightRingButton;
     private JoystickButton killSwitch;
 
     private OI() {
@@ -44,6 +46,9 @@ public class OI {
 
         this.killSwitch = new JoystickButton(driveJoystick, 5);
         this.killSwitch.whenPressed(new ClearSubsystemCommand());
+
+        this.lightRingButton = new JoystickButton(driveJoystick, 3);
+        this.lightRingButton.whenPressed(new ToggleLightRingCommand());
     }
 
     /**

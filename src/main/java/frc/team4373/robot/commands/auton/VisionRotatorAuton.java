@@ -8,7 +8,7 @@ import frc.team4373.robot.RobotMap;
 import frc.team4373.robot.subsystems.Drivetrain;
 
 /**
- * A Javadoc template. TODO: Update VisionRotatorAuton Javadoc.
+ * Rotates to center on vision targets.
  */
 public class VisionRotatorAuton extends Command {
     private Drivetrain drivetrain;
@@ -32,13 +32,15 @@ public class VisionRotatorAuton extends Command {
         double offset = SmartDashboard.getNumber("vision_angle_offset", 0);
         this.drivetrain.setRight(RobotMap.VISION_ROTATOR_SPEED * Math.signum(offset));
         this.drivetrain.setLeft(-RobotMap.VISION_ROTATOR_SPEED * Math.signum(offset));
-        if (Math.abs(offset) < 5) {
+        if (Math.abs(offset) < 2) {
             if (awaitingFinish) {
-                if (RobotController.getFPGATime() * 1000 - 3000000 > finishWaitStart) finished = true;
+                if (RobotController.getFPGATime() * 1000 - 10000000 > finishWaitStart) finished = true;
             } else {
                 this.finishWaitStart = RobotController.getFPGATime() * 1000;
                 this.awaitingFinish = true;
             }
+        } else {
+            this.awaitingFinish = false;
         }
     }
 
