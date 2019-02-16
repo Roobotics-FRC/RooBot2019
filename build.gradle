@@ -28,20 +28,22 @@ def ROBOT_MAIN_CLASS = "frc.team4373.robot.Main"
 ext.isMacOS = OperatingSystem.current().isMacOsX()
 ext.network = ''
 
-def switchTo4373() {
-    if (isMacOS) {
-        Process curNetProc = Runtime.getRuntime().exec('networksetup -getairportnetwork en0')
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(curNetProc.getInputStream()))
-        String res = stdInput.readLine()
-        network = res.substring(23)
-        curNetProc.waitFor()
-        if (network != '4373') {
-            println 'Connecting to 4373…'
-            Process setProc = Runtime.getRuntime().exec('networksetup -setairportnetwork en0 4373 robotics')
-            setProc.waitFor()
-            println 'Connected to 4373'
-        } else {
-            println 'Already connected to 4373'
+task switchTo4373 {
+    doLast {
+        if (isMacOS) {
+            Process curNetProc = Runtime.getRuntime().exec('networksetup -getairportnetwork en0')
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(curNetProc.getInputStream()))
+            String res = stdInput.readLine()
+            network = res.substring(23)
+            curNetProc.waitFor()
+            if (network != '4373') {
+                println 'Connecting to 4373…'
+                Process setProc = Runtime.getRuntime().exec('networksetup -setairportnetwork en0 4373 robotics')
+                setProc.waitFor()
+                println 'Connected to 4373'
+            } else {
+                println 'Already connected to 4373'
+            }
         }
     }
 }
@@ -55,10 +57,14 @@ def switchBack() {
     }
 }
 
+project.tasks.deploy.dependsOn switchTo4373
+project.tasks.deploy.doLast {
+    switchBack()
+}
+
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
-    switchTo4373()
     targets {
         roboRIO("roborio") {
             // Team number is loaded either from the .wpilib/wpilib_preferences.json
@@ -83,11 +89,7 @@ deploy {
             directory = '/home/lvuser/deploy'
         }
     }
-    tasks.deploy.doLast(){
-        switchBack()
-    }
 }
-
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
