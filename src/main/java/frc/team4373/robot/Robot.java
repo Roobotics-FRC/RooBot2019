@@ -33,14 +33,8 @@ public class Robot extends TimedRobot {
         while (port < 8) {
             solenoids[2][port] = new DoubleSolenoid(2, port++, port++);
         }
-        boolean secondBot = true;
-        if (!secondBot) {
-            solenoids[3][0] = new DoubleSolenoid(3, 0, 2);
-            solenoids[3][2] = new DoubleSolenoid(3, 1, 7);
-        } else {
-            solenoids[3][0] = new DoubleSolenoid(3, 0, 1);
-            solenoids[3][2] = new DoubleSolenoid(3, 2, 3);
-        }
+        solenoids[3][0] = new DoubleSolenoid(3, 0, 2);
+        solenoids[3][2] = new DoubleSolenoid(3, 1, 7);
     }
 
     /**
